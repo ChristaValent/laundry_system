@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_system/app_colours.dart';
+import 'package:laundry_system/widgets/laundry_home.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,15 +11,26 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Laundry App',
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 211, 182), // Set background color
-        body: Center(
-          child: Text('Hello World!'),
+      theme: ThemeData.light().copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.mintGreen,
+          brightness: Brightness.light,
+          surface: AppColors.cream,
+        ),
+        scaffoldBackgroundColor: Colors.transparent,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.mintGreen,
+          foregroundColor: AppColors.charcoal,
+          elevation: 0,
+        ),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: AppColors.charcoal),
         ),
       ),
+      home: const LaundryHome(),
     );
   }
 }

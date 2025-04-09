@@ -10,8 +10,8 @@ const colourCategories = {
     name: 'Light',
     color: Color.fromARGB(255, 255, 255, 255),
   ),
-  Colour.colorful: ColourCategory(
-    name: 'Colorful',
+  Colour.colourful: ColourCategory(
+    name: 'Colourful',
     color: Color.fromARGB(255, 255, 0, 0),
   )
 };

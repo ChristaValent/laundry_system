@@ -36,20 +36,25 @@ class _LaundryListState extends State<LaundryList> {
     final List<LaundryItem> loadedItems = [];
     final decoded = json.decode(response.body);
 
-    if (decoded == null || decoded is! Map<String, dynamic> || decoded.isEmpty) {
-    setState(() {
-      isLoading = false;
-      _laundryItems = []; // Optional: explicitly clear
-    });
-    return;
-  }
+    if (decoded == null ||
+        decoded is! Map<String, dynamic> ||
+        decoded.isEmpty) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          _laundryItems = []; // Optional: explicitly clear
+        });
+      }
+      return;
+    }
 
-  final Map<String, dynamic> laundryData = decoded;
-
+    final Map<String, dynamic> laundryData = decoded;
 
     for (final item in laundryData.entries) {
-      final selectedCategory = colourCategories.entries.firstWhere(
-        (categoryItem) => categoryItem.value.name == item.value['category']).value;
+      final selectedCategory = colourCategories.entries
+          .firstWhere((categoryItem) =>
+              categoryItem.value.name == item.value['category'])
+          .value;
 
       loadedItems.add(
         LaundryItem(
@@ -60,11 +65,12 @@ class _LaundryListState extends State<LaundryList> {
         ),
       );
     }
-
-    setState(() {
-      isLoading = false;
-      _laundryItems = loadedItems;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+        _laundryItems = loadedItems;
+      });
+    }
   }
 
   void removeItem(LaundryItem item) {
@@ -73,9 +79,11 @@ class _LaundryListState extends State<LaundryList> {
         'laundry/${item.id}.json');
     http.delete(url);
 
-    setState(() {
-      _laundryItems.remove(item);
-    });
+    if (mounted) {
+      setState(() {
+        _laundryItems.remove(item);
+      });
+    }
   }
 
   void _addItem() async {
@@ -85,16 +93,20 @@ class _LaundryListState extends State<LaundryList> {
       ),
     );
 
-    if (newItem != null) {
-      setState(() {
-        _laundryItems.add(newItem);
-      });
+    if (mounted) {
+      if (newItem != null) {
+        setState(() {
+          _laundryItems.add(newItem);
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-   final filtered = _laundryItems.where((item) => item.category.name == widget.category).toList();
+    final filtered = _laundryItems
+        .where((item) => item.category.name == widget.category)
+        .toList();
 
     return Container(
       decoration: const BoxDecoration(
@@ -104,7 +116,7 @@ class _LaundryListState extends State<LaundryList> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Text('${widget.category} Laundry'),
-           actions: [
+          actions: [
             IconButton(
               onPressed: _addItem,
               icon: const Icon(Icons.add),
@@ -119,12 +131,43 @@ class _LaundryListState extends State<LaundryList> {
                 itemBuilder: (ctx, i) {
                   final item = filtered[i];
                   return Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
                     elevation: 3,
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
                       title: Text(item.name),
                       leading: const Icon(Icons.checkroom),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          removeItem(item); // Call the removeItem method
+                        },
+                      ),
+                      onTap: () {
+                        // Show the image in a dialog when the item is clicked
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: Text(item.name),
+                            content: item.imageUrl != null
+                                ? Image.memory(
+                                    base64Decode(item.imageUrl!),
+                                    height: 500,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Text('No image available'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: const Text('Close'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

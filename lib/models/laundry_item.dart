@@ -11,6 +11,6 @@ class LaundryItem {
 
   final String id;
   final String name;
-  final Image? imageUrl;
+  final String? imageUrl;
   final ColourCategory category;
 }

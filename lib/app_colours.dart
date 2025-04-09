@@ -14,6 +14,4 @@ class AppColors {
 }
 
 
-  // Existing colors and gradients
-
  

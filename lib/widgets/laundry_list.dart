@@ -42,7 +42,7 @@ class _LaundryListState extends State<LaundryList> {
       if (mounted) {
         setState(() {
           isLoading = false;
-          _laundryItems = []; // Optional: explicitly clear
+          _laundryItems = []; 
         });
       }
       return;

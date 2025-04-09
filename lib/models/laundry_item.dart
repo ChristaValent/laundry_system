@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:laundry_system/models/colour_category.dart';
 
 class LaundryItem {

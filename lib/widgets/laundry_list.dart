@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:laundry_system/app_colours.dart';
 import 'package:laundry_system/data/colour_categories.dart';
-import 'package:laundry_system/data/dummy_data.dart';
+// import 'package:laundry_system/data/dummy_data.dart';
 import 'package:laundry_system/models/laundry_item.dart';
 import 'package:laundry_system/widgets/new_item.dart';
 
@@ -25,23 +27,35 @@ class _LaundryListState extends State<LaundryList> {
   }
 
   Future _loadLaundry() async {
-    // final url = Uri.https(
-    //     'cvlaundryapp-default-rtdb.europe-west1.firebasedatabase.app',
-    //     'laundry.json');
-    // final response = await http.get(url);
+    final url = Uri.https(
+        'cvlaundryapp-default-rtdb.europe-west1.firebasedatabase.app',
+        'laundry.json');
+
+    final response = await http.get(url);
 
     final List<LaundryItem> loadedItems = [];
+    final decoded = json.decode(response.body);
 
-    for (final item in dummyLaundryItems) {
-      final selectedCategory = colourCategories.values.firstWhere(
-        (categoryItem) => categoryItem.name == item.category.name,
-      );
+    if (decoded == null || decoded is! Map<String, dynamic> || decoded.isEmpty) {
+    setState(() {
+      isLoading = false;
+      _laundryItems = []; // Optional: explicitly clear
+    });
+    return;
+  }
+
+  final Map<String, dynamic> laundryData = decoded;
+
+
+    for (final item in laundryData.entries) {
+      final selectedCategory = colourCategories.entries.firstWhere(
+        (categoryItem) => categoryItem.value.name == item.value['category']).value;
 
       loadedItems.add(
         LaundryItem(
-          id: item.id,
-          name: item.name,
-          imageUrl: item.imageUrl,
+          id: (item.key),
+          name: item.value['name'],
+          imageUrl: item.value['image'],
           category: selectedCategory,
         ),
       );

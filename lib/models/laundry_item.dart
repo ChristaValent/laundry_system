@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:laundry_system/models/colour_category.dart';
 
 class LaundryItem {
@@ -10,6 +11,6 @@ class LaundryItem {
 
   final String id;
   final String name;
-  final String imageUrl;
+  final Image? imageUrl;
   final ColourCategory category;
 }

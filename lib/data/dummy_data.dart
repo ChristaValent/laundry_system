@@ -7,16 +7,16 @@ final List<LaundryItem> dummyLaundryItems = [
   LaundryItem(
     id: '1',
     name: 'White Shirt',
-    imageUrl: '',
+    imageUrl: null,
     category: colourCategories[Colour.light]!),
   LaundryItem(
     id: '1',
     name: 'Dark Blue Shirt',
-    imageUrl: '',
+    imageUrl: null,
     category: colourCategories[Colour.dark]!),
   LaundryItem(
     id: '1',
     name: 'pink jumper',
-    imageUrl: '',
+    imageUrl: null,
     category: colourCategories[Colour.colourful]!),
 ];

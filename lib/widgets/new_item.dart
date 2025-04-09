@@ -39,7 +39,7 @@ class _NewItemState extends State<NewItem> {
           headers: {'Content-Type': 'application/json'},
           body: json.encode({
             'name': _enteredName,
-            'image': _enteredImageUrl,
+            'image': _enteredImageUrl.isEmpty ? null : _enteredImageUrl,
             'category': _enteredCategory!.name
           }));
 
@@ -52,13 +52,9 @@ class _NewItemState extends State<NewItem> {
       Navigator.of(context).pop(LaundryItem(
           id: responseData["name"],
           name: _enteredName,
-          imageUrl: _enteredImageUrl,
+          imageUrl: _enteredImageUrl.isEmpty ? null : Image.network(_enteredImageUrl),
           category: _enteredCategory!));
     }
-    _formKey.currentState?.save();
-    setState(() {
-      isSendingData = true;
-    });
   }
 
   @override
@@ -107,13 +103,11 @@ class _NewItemState extends State<NewItem> {
                         ),
                         style: const TextStyle(color: AppColors.charcoal), // Set input text color
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an image URL.';
-                          }
+                          // Allow empty values
                           return null;
                         },
                         onSaved: (value) {
-                          _enteredImageUrl = value!;
+                          _enteredImageUrl = value ?? "";
                         },
                       ),
                       const SizedBox(height: 16),

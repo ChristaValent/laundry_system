@@ -75,16 +75,18 @@ Widget build(BuildContext context) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         elevation: 4,
         color: AppColors.cream,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: color,
-            child: Icon(icon, color: Colors.white),
+        child: Center(
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: color,
+              child: Icon(icon, color: Colors.white),
+            ),
+            title: Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
           ),
-          title: Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          trailing: const Icon(Icons.arrow_forward_ios),
         ),
       ),
     );

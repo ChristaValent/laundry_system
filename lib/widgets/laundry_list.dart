@@ -42,7 +42,7 @@ class _LaundryListState extends State<LaundryList> {
       if (mounted) {
         setState(() {
           isLoading = false;
-          _laundryItems = []; 
+          _laundryItems = [];
         });
       }
       return;
@@ -123,55 +123,60 @@ class _LaundryListState extends State<LaundryList> {
             ),
           ],
         ),
-        body: filtered.isEmpty
-            ? const Center(child: Text('No items in this category.'))
-            : ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: filtered.length,
-                itemBuilder: (ctx, i) {
-                  final item = filtered[i];
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    elevation: 3,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: ListTile(
-                      title: Text(item.name),
-                      leading: const Icon(Icons.checkroom),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          removeItem(item); // Call the removeItem method
-                        },
-                      ),
-                      onTap: () {
-                        // Show the image in a dialog when the item is clicked
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: Text(item.name),
-                            content: item.imageUrl != null
-                                ? Image.memory(
-                                    base64Decode(item.imageUrl!),
-                                    height: 500,
-                                    fit: BoxFit.cover,
-                                  )
-                                : const Text('No image available'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: const Text('Close'),
-                              ),
-                            ],
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : filtered.isEmpty
+                ? const Center(child: Text('No items in this category.'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: filtered.length,
+                    itemBuilder: (ctx, i) {
+                      final item = filtered[i];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        elevation: 3,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: ListTile(
+                          title: Text(item.name),
+                          leading: const Icon(Icons.checkroom),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              removeItem(item);
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text(
+                                  item.name,
+                                  style: const TextStyle(
+                                      color: AppColors.charcoal),
+                                ),
+                                content: item.imageUrl != null
+                                    ? Image.memory(
+                                        base64Decode(item.imageUrl!),
+                                        height: 500,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : const Text('No image available'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
       ),
     );
   }

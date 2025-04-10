@@ -15,31 +15,58 @@ class LaundryHome extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.laundryBackgroundGradient,
+Widget build(BuildContext context) {
+  final categories = [
+    {'title': 'Light', 'icon': Icons.wb_sunny, 'color': Colors.yellow},
+    {'title': 'Dark', 'icon': Icons.nightlight_round, 'color': Colors.black87},
+    {'title': 'Colourful', 'icon': Icons.palette, 'color': Colors.teal},
+  ];
+
+  return Container(
+    decoration: const BoxDecoration(
+      gradient: AppColors.laundryBackgroundGradient,
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        title: const Text('Laundry Categories'),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: const Text('Laundry Categories'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildCategoryCard(context, 'Light', Icons.wb_sunny, Colors.yellow),
-              const SizedBox(height: 20),
-              _buildCategoryCard(context, 'Dark', Icons.nightlight_round, Colors.black87),
-              const SizedBox(height: 20),
-              _buildCategoryCard(context, 'Colourful', Icons.palette, Colors.teal),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            int crossAxisCount = 1;
+
+            if (constraints.maxWidth >= 900) {
+              crossAxisCount = 3; // Wide screen: all in a row
+            } else if (constraints.maxWidth >= 600) {
+              crossAxisCount = 2; // Tablet/landscape: 2 columns
+            }
+
+            return GridView.builder(
+              itemCount: categories.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 3.5,
+              ),
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                return _buildCategoryCard(
+                  context,
+                  category['title'] as String,
+                  category['icon'] as IconData,
+                  category['color'] as Color,
+                );
+              },
+            );
+          },
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildCategoryCard(BuildContext context, String title, IconData icon, Color color) {
     return GestureDetector(
